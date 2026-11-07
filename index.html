@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Blazing 7s &mdash; Classic 3-Reel Slot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="stage">
+  <canvas id="game" width="1920" height="1080"></canvas>
+  <button id="lever-hit" title="Pull the handle (L)" aria-label="Pull handle"></button>
+
+  <div id="deck">
+    <button id="btn-coins" class="key chrome" title="Insert coins (I)">INSERT<br>COINS</button>
+    <button id="btn-cash" class="key yellow" title="Cash out (C)">CASH<br>OUT</button>
+    <button id="btn-bet1" class="key red" title="Bet one coin (1)">BET<br>ONE</button>
+    <button id="btn-spin" class="key spin" title="Spin reels (Space)">SPIN<br>REELS</button>
+    <button id="btn-max" class="key red" title="Bet max and spin (3)">BET<br>MAX</button>
+    <div class="side">
+      <button id="btn-help" class="key small" title="Pays &amp; rules (H)">?</button>
+      <button id="btn-sound" class="key small" title="Mute (M)">&#128266;</button>
+      <input id="vol" type="range" min="0" max="1" step="0.01" title="Volume">
+    </div>
+  </div>
+
+  <div id="help" class="hidden">
+    <div class="panel">
+      <h2>BLAZING 7s &mdash; PAYS &amp; RULES</h2>
+      <div id="help-body"></div>
+      <p class="keys">SPACE spin &middot; 1 bet one &middot; 3 bet max &middot; L pull handle &middot; C cash out &middot; I insert coins &middot; H help &middot; M mute</p>
+      <button id="help-close" class="key yellow wide">CLOSE</button>
+    </div>
+  </div>
+
+  <div id="splash">
+    <div class="inner">
+      <div class="title">BLAZING 7s</div>
+      <div class="sub">CLASSIC THREE REEL &middot; DOUBLE JACKPOT</div>
+      <div id="splash-text">LOADING&hellip;</div>
+      <div class="bar"><div id="splash-bar"></div></div>
+      <div class="note">Unofficial fan recreation &middot; play money only &middot; sound on</div>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/reel.js"></script>
+<script src="js/assets.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/game.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

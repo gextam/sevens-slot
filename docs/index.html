@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Blazing 7s &mdash; classic three-reel slot recreation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A photorealistic web recreation of the classic Blazing 7s three-reel stepper: PAR-sheet accurate reels, real physics, synthesized sound.">
+<meta property="og:title" content="Blazing 7s — classic three-reel slot recreation">
+<meta property="og:image" content="screenshots/hero.jpg">
+<link rel="icon" href="data:,">
+<style>
+  :root { --red: #ff4a2a; --amber: #ffd36a; --ink: #0a0a10; --paper: #eee6dc; --muted: #a89b8a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: radial-gradient(ellipse at 50% 0%, #2a1612 0%, #07060a 60%); color: var(--paper); font-family: "Helvetica Neue", Arial, sans-serif; line-height: 1.55; }
+  a { color: var(--amber); }
+  header { text-align: center; padding: 56px 20px 24px; }
+  header img.logo { width: min(600px, 90vw); filter: drop-shadow(0 0 30px rgba(255,120,40,.4)); }
+  header p.tag { letter-spacing: 6px; color: var(--muted); margin: 14px 0 28px; font-size: 14px; text-transform: uppercase; }
+  .cta { display: inline-block; padding: 16px 40px; border-radius: 10px; font-weight: 900; letter-spacing: 3px; color: #fff; text-decoration: none; background: linear-gradient(180deg, #ffb37a, #ff5a1f 40%, #a82a08); box-shadow: 0 6px 0 #4a1206, 0 14px 30px rgba(0,0,0,.6); }
+  .cta:hover { filter: brightness(1.08); }
+  .hero { display: block; width: min(1200px, 94vw); margin: 40px auto 0; border-radius: 14px; border: 2px solid #4a4a50; box-shadow: 0 30px 80px rgba(0,0,0,.8); }
+  main { max-width: 1200px; margin: 0 auto; padding: 40px 20px 80px; }
+  h2 { color: var(--red); letter-spacing: 3px; font-size: 24px; margin: 56px 0 18px; border-bottom: 1px solid #3a2a24; padding-bottom: 10px; text-transform: uppercase; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+  .card { background: rgba(255,255,255,.03); border: 1px solid #3a2a24; border-radius: 12px; padding: 18px 20px; }
+  .card h3 { margin: 0 0 8px; color: var(--amber); font-size: 17px; }
+  .card p { margin: 0; color: #d9ccba; font-size: 15px; }
+  .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 22px; }
+  figure { margin: 0; } figure img { width: 100%; border-radius: 10px; border: 1px solid #3a2a24; box-shadow: 0 12px 30px rgba(0,0,0,.6); }
+  figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; } td, th { border-bottom: 1px solid #2a2018; padding: 8px 10px; text-align: left; } th { color: var(--amber); }
+  code { background: #15131c; padding: 2px 6px; border-radius: 4px; color: #ffe9a8; }
+  footer { text-align: center; color: #7d6a5a; font-size: 13px; padding: 30px 20px 60px; }
+</style>
+</head>
+<body>
+<header>
+  <img class="logo" src="../assets/logo.png" alt="Blazing 7s">
+  <p class="tag">Classic three-reel stepper &middot; one payline &middot; three coins &middot; Double Jackpot</p>
+  <a class="cta" href="../index.html">PLAY IN YOUR BROWSER</a>
+  <img class="hero" src="screenshots/hero.jpg" alt="The Blazing 7s cabinet">
+</header>
+<main>
+  <h2>What it is</h2>
+  <p>An unofficial, play-money recreation of Bally's classic <em>Blazing 7s</em> three-reel slot machine in plain HTML5 Canvas,
+    Web Audio and vanilla JavaScript. The reels use the weights of the real PAR sheet (72 virtual stops mapped onto 22 physical
+    stops per reel), so the machine hits 12.05% of pulls and returns 91.96% / 92.52% / 92.70% for one, two and three coins, exactly
+    as published.</p>
+  <h2>Features</h2>
+  <div class="grid">
+    <div class="card"><h3>Stepper physics</h3><p>Snap wind-up, blurred spin, abrupt deceleration and a stiff spring settle; reels stop left to right with a clunk and rising chimes.</p></div>
+    <div class="card"><h3>Virtual reels</h3><p>Near-misses happen the way they do on the real machine: blanks beside the Blazing 7 carry extra weight.</p></div>
+    <div class="card"><h3>Buy-a-pay and Double Jackpot</h3><p>7s need two coins, the third coin doubles them, and the Double Jackpot symbol on reel 3 turns two Blazing 7s into 5,000 coins.</p></div>
+    <div class="card"><h3>The cabinet</h3><p>Chrome rails, candle, chase lamps, LED meters, VFD message line, belly-glass pay table with the lit coin column, and a handle you can pull.</p></div>
+    <div class="card"><h3>Synthesized sound</h3><p>Coin clinks, lever ratchet, motor whir, stop chimes, counting dings, jackpot siren, hopper rattle &mdash; all generated live.</p></div>
+    <div class="card"><h3>Verified maths</h3><p><code>node tools/rtp-sim.js</code> prints the par-sheet report; <code>node tools/smoke.mjs</code> plays the machine headless.</p></div>
+  </div>
+  <h2>Screenshots</h2>
+  <div class="shots">
+    <figure><img src="screenshots/base.jpg" alt="Idle machine"><figcaption>Idle with credits inserted.</figcaption></figure>
+    <figure><img src="screenshots/bet.jpg" alt="Three coins played"><figcaption>Three coins played: the 3-coin column lights.</figcaption></figure>
+    <figure><img src="screenshots/spin.jpg" alt="Spinning"><figcaption>Reels at speed.</figcaption></figure>
+    <figure><img src="screenshots/win.jpg" alt="Win"><figcaption>Three triple bars: the pay-glass row and payline flash while credits count.</figcaption></figure>
+    <figure><img src="screenshots/jackpot.jpg" alt="Jackpot"><figcaption>Blazing 7 &middot; Blazing 7 &middot; Double Jackpot &mdash; 5,000 coins.</figcaption></figure>
+    <figure><img src="screenshots/lever.jpg" alt="Lever pulled"><figcaption>Pulling the handle.</figcaption></figure>
+    <figure><img src="screenshots/cashout.jpg" alt="Cash out"><figcaption>Cashing out through the hopper.</figcaption></figure>
+    <figure><img src="screenshots/help.jpg" alt="Pays and rules"><figcaption>Pays and rules.</figcaption></figure>
+  </div>
+  <h2>Controls</h2>
+  <table>
+    <tr><th>Action</th><th>Button</th><th>Key</th></tr>
+    <tr><td>Spin (repeats last wager)</td><td>SPIN REELS / handle</td><td><code>Space</code>, <code>L</code></td></tr>
+    <tr><td>Bet one coin</td><td>BET ONE</td><td><code>1</code></td></tr>
+    <tr><td>Bet max and spin</td><td>BET MAX</td><td><code>3</code></td></tr>
+    <tr><td>Cash out</td><td>CASH OUT</td><td><code>C</code></td></tr>
+    <tr><td>Insert 100 credits</td><td>INSERT COINS</td><td><code>I</code></td></tr>
+    <tr><td>Pays and rules</td><td>?</td><td><code>H</code></td></tr>
+    <tr><td>Mute</td><td>speaker</td><td><code>M</code></td></tr>
+  </table>
+  <h2>Run it yourself</h2>
+  <p>Clone or download the project and open <code>index.html</code>, or serve the folder (<code>python -m http.server 8766</code>, or <code>start.cmd</code> on Windows). The README has the configuration reference and the tools.</p>
+</main>
+<footer>Unofficial fan recreation for entertainment only &middot; play money, no real wagering &middot; Blazing 7s is a trademark of its owner &middot; artwork generated for this project, all sound synthesized at runtime.</footer>
+</body>
+</html>

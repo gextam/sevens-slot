@@ -1,0 +1,61 @@
+/* BLAZING 7s — button deck and overlays. The stage is a fixed 1920x1080 scene scaled to fit. */
+:root { --font: "Arial Narrow", "Helvetica Neue", Arial, sans-serif; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-family: var(--font); color: #eee; user-select: none; -webkit-user-select: none; }
+#stage { position: fixed; left: 50%; top: 50%; width: 1920px; height: 1080px; transform: translate(-50%, -50%); transform-origin: center center; }
+#game { position: absolute; left: 0; top: 0; display: block; }
+
+#lever-hit { position: absolute; left: 1396px; top: 200px; width: 130px; height: 360px; background: transparent; border: 0; cursor: pointer; outline: none; }
+#lever-hit.ready:hover { background: radial-gradient(ellipse at 50% 20%, rgba(255,255,255,.08), transparent 70%); }
+
+/* ------------------------------------------------------------- button deck */
+#deck { position: absolute; left: 520px; top: 1004px; width: 880px; height: 76px;
+  background: linear-gradient(180deg, #3a3a40 0%, #1c1c21 18%, #121216 100%);
+  border-top: 3px solid #9a9aa0; box-shadow: inset 0 3px 0 #e8e8ec, inset 0 -8px 20px rgba(0,0,0,.7); display: flex; align-items: center; justify-content: center; gap: 18px; padding: 0 40px 0 200px; }
+.key { font-family: var(--font); font-weight: 900; font-size: 15px; line-height: 1.05; letter-spacing: 1px; color: #2a1a06; border: 0; cursor: pointer; outline: none;
+  width: 118px; height: 54px; border-radius: 8px; text-shadow: 0 1px 0 rgba(255,255,255,.35);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.55), inset 0 -4px 0 rgba(0,0,0,.35), 0 5px 0 #0a0a0c, 0 8px 14px rgba(0,0,0,.7); transition: transform .05s, filter .15s; }
+.key:active { transform: translateY(4px); box-shadow: inset 0 2px 0 rgba(255,255,255,.4), inset 0 -2px 0 rgba(0,0,0,.35), 0 1px 0 #0a0a0c, 0 3px 8px rgba(0,0,0,.7); }
+.key:disabled { filter: brightness(.45) saturate(.5); cursor: default; transform: none; }
+.key.red { background: linear-gradient(180deg, #ff8a7a, #d81e1e 40%, #8e0f0f); color: #fff; text-shadow: 0 1px 1px rgba(0,0,0,.5); }
+.key.yellow { background: linear-gradient(180deg, #fff2b0, #f2c030 40%, #a87a10); }
+.key.chrome { background: linear-gradient(180deg, #ffffff, #c9c9cf 40%, #6d6d74); color: #1a1a1e; }
+.key.spin { width: 230px; height: 60px; font-size: 20px; letter-spacing: 2px; background: linear-gradient(180deg, #ffb37a, #ff5a1f 40%, #a82a08); color: #fff; text-shadow: 0 1px 1px rgba(0,0,0,.5); }
+.key.lit { filter: brightness(1.12) drop-shadow(0 0 10px rgba(255,200,120,.65)); }
+.key.spin.lit { animation: spinlit 1.4s ease-in-out infinite; }
+@keyframes spinlit { 0%, 100% { filter: brightness(1.05); } 50% { filter: brightness(1.3) drop-shadow(0 0 16px rgba(255,140,60,.9)); } }
+.key.small { width: 44px; height: 44px; border-radius: 50%; font-size: 18px; background: linear-gradient(180deg, #ffffff, #c9c9cf 40%, #6d6d74); }
+#btn-sound.muted { filter: grayscale(.8) brightness(.6); }
+.key.wide { width: 180px; }
+.side { position: absolute; left: 24px; top: 14px; display: flex; align-items: center; gap: 10px; }
+#vol { width: 90px; accent-color: #ff5a1f; cursor: pointer; }
+
+/* ---------------------------------------------------------------- overlays */
+#help { position: absolute; inset: 0; background: rgba(0,0,0,.8); display: flex; align-items: center; justify-content: center; z-index: 20; }
+#help.hidden, #splash.hidden { display: none; }
+#help .panel { width: 1100px; max-height: 1000px; overflow: auto; padding: 28px 40px 34px; border-radius: 16px; text-align: center;
+  background: linear-gradient(180deg, #1c1114, #0a0608); border: 3px solid #c9c9cf; box-shadow: 0 0 0 2px #3a3a40, 0 0 60px rgba(0,0,0,.9); }
+#help h2 { margin: 0 0 16px; font-size: 36px; letter-spacing: 4px; color: #ff6a3a; text-shadow: 0 0 18px rgba(255,90,30,.6); }
+table.pays { width: 100%; border-collapse: collapse; font-size: 17px; }
+table.pays th { color: #ffd36a; text-align: right; padding: 4px 10px; border-bottom: 1px solid #4a3a2a; }
+table.pays th:first-child, table.pays td:first-child { text-align: left; }
+table.pays td { padding: 3px 10px; text-align: right; border-bottom: 1px solid #2a2020; color: #eee; }
+table.pays tr:nth-child(even) td { background: rgba(255,255,255,.03); }
+.rules { text-align: left; font-size: 16px; line-height: 1.45; columns: 2; column-gap: 36px; margin: 16px 0 8px; padding-left: 22px; color: #e6d7c8; }
+.small { font-size: 14px; color: #9b8a7c; }
+.keys { font-size: 14px; color: #c9c9cf; letter-spacing: 1px; margin: 6px 0 14px; }
+
+#splash { position: absolute; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center; cursor: pointer;
+  background: radial-gradient(ellipse at 50% 40%, rgba(60,20,10,.85) 0%, rgba(0,0,0,.96) 75%); }
+#splash .inner { text-align: center; }
+#splash .title { font-family: Impact, "Arial Black", var(--font); font-size: 200px; letter-spacing: 6px; line-height: 1;
+  background: linear-gradient(180deg, #fff1c0 0%, #ffb347 25%, #ff3b1f 55%, #8a1208 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0 30px rgba(255,120,30,.55)) drop-shadow(0 6px 0 #2a0a04); }
+#splash .sub { font-size: 26px; letter-spacing: 10px; color: #c9c9cf; margin: 10px 0 60px; }
+#splash-text { font-size: 32px; letter-spacing: 8px; color: #ffe9a8; }
+#splash.ready #splash-text { animation: blink 1.2s ease-in-out infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+#splash .bar { width: 520px; height: 10px; margin: 26px auto 0; background: #1a1a22; border: 1px solid #4a4a50; border-radius: 6px; overflow: hidden; }
+#splash-bar { height: 100%; width: 0; background: linear-gradient(90deg, #8a1208, #ff8a3a); transition: width .2s; }
+#splash.ready .bar { opacity: 0; }
+#splash .note { margin-top: 40px; font-size: 15px; letter-spacing: 3px; color: #7d6a5a; }
