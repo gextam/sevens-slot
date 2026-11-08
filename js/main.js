@@ -29,7 +29,7 @@
     S.game = game; S.renderer = renderer; S.ui = ui;
     setupDebug();
 
-    S.assets.load(p => ui.setProgress(p)).then(() => { S.assets.prepareSymbols(380, 220); ui.buildHelp(); ui.assetsLoaded(); });
+    S.assets.load(p => ui.setProgress(p)).then(() => { S.assets.prepareSymbols(740, 340); ui.buildHelp(); ui.assetsLoaded(); });
 
     S.timeOffset = 0;
     const clock = () => performance.now() / 1000 + S.timeOffset;

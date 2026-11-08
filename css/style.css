@@ -5,13 +5,13 @@ html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font-f
 #stage { position: fixed; left: 50%; top: 50%; width: 1920px; height: 1080px; transform: translate(-50%, -50%); transform-origin: center center; }
 #game { position: absolute; left: 0; top: 0; display: block; }
 
-#lever-hit { position: absolute; left: 1396px; top: 200px; width: 130px; height: 360px; background: transparent; border: 0; cursor: pointer; outline: none; }
+#lever-hit { position: absolute; left: 1606px; top: 250px; width: 130px; height: 360px; background: transparent; border: 0; cursor: pointer; outline: none; }
 #lever-hit.ready:hover { background: radial-gradient(ellipse at 50% 20%, rgba(255,255,255,.08), transparent 70%); }
 
 /* ------------------------------------------------------------- button deck */
-#deck { position: absolute; left: 520px; top: 1004px; width: 880px; height: 76px;
+#deck { position: absolute; left: 300px; top: 1004px; width: 1320px; height: 76px;
   background: linear-gradient(180deg, #3a3a40 0%, #1c1c21 18%, #121216 100%);
-  border-top: 3px solid #9a9aa0; box-shadow: inset 0 3px 0 #e8e8ec, inset 0 -8px 20px rgba(0,0,0,.7); display: flex; align-items: center; justify-content: center; gap: 18px; padding: 0 40px 0 200px; }
+  border-top: 3px solid #9a9aa0; box-shadow: inset 0 3px 0 #e8e8ec, inset 0 -8px 20px rgba(0,0,0,.7); display: flex; align-items: center; justify-content: center; gap: 18px; padding: 0 40px 0 260px; }
 .key { font-family: var(--font); font-weight: 900; font-size: 15px; line-height: 1.05; letter-spacing: 1px; color: #2a1a06; border: 0; cursor: pointer; outline: none;
   width: 118px; height: 54px; border-radius: 8px; text-shadow: 0 1px 0 rgba(255,255,255,.35);
   box-shadow: inset 0 2px 0 rgba(255,255,255,.55), inset 0 -4px 0 rgba(0,0,0,.35), 0 5px 0 #0a0a0c, 0 8px 14px rgba(0,0,0,.7); transition: transform .05s, filter .15s; }

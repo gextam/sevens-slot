@@ -9,15 +9,18 @@
   'use strict';
   const S = root.SEVENS, A = S.assets, FX = S.fx, C = S.CONFIG;
   const W = 1920, H = 1080;
-  const CAB = { x: 520, w: 880, top: 70 };
-  const TOP = { x: 560, y: 92, w: 800, h: 226 };
-  const REEL = { x: 663, y: 345, w: 190, h: 110, rows: 3, cols: 3, gap: 12 };
+  /* The reels dominate the cabinet like a real stepper: 370 x 170 cells in a 1146 x 510 window
+     (about three times the glass area of the first layout), a slim marquee above, the message
+     line and meters on one row below, and a four-column pay glass. */
+  const CAB = { x: 300, w: 1320, top: 64 };
+  const TOP = { x: 356, y: 80, w: 1208, h: 128 };
+  const REEL = { x: 387, y: 240, w: 370, h: 170, rows: 3, cols: 3, gap: 18 };
   REEL.winW = REEL.cols * REEL.w + (REEL.cols - 1) * REEL.gap; REEL.winH = REEL.rows * REEL.h; REEL.cy = REEL.y + REEL.winH / 2;
-  const GLASS = { x: 560, y: 332, w: 800, h: 356 };
-  const VFD = { x: 640, y: 686, w: 640, h: 24 };
-  const METERS = { y: 734, h: 50 };
-  const BELLY = { x: 560, y: 792, w: 800, h: 206 };
-  const LEVER = { pivotX: 1452, pivotY: 505, len: 275, knob: 27 };
+  const GLASS = { x: 356, y: 224, w: 1208, h: 542 };
+  const VFD = { x: 376, y: 782, w: 520, h: 44 };
+  const METERS = { y: 792, h: 36 };
+  const BELLY = { x: 356, y: 844, w: 1208, h: 148 };
+  const LEVER = { pivotX: 1672, pivotY: 520, len: 240, knob: 27 };
   const R_CELLS = 3.2;
   const rr = A.roundRect;
   const FONT_UI = '"Arial Narrow", "Helvetica Neue", Arial, sans-serif';
@@ -125,17 +128,20 @@
     ctx.fillStyle = '#060305'; ctx.fillRect(TOP.x, TOP.y, TOP.w, TOP.h);
     if (flames) { ctx.globalAlpha = 0.55; const r = Math.max(TOP.w / flames.width, TOP.h / flames.height); const fw = flames.width * r, fh = flames.height * r; const drift = Math.sin(now * 0.3) * 20; ctx.drawImage(flames, TOP.x + (TOP.w - fw) / 2 + drift, TOP.y + (TOP.h - fh) / 2 + 20, fw, fh); ctx.globalAlpha = 1; }
     let g = ctx.createLinearGradient(0, TOP.y, 0, TOP.y + TOP.h); g.addColorStop(0, 'rgba(0,0,0,0.1)'); g.addColorStop(0.6, 'rgba(0,0,0,0.55)'); g.addColorStop(1, 'rgba(0,0,0,0.85)'); ctx.fillStyle = g; ctx.fillRect(TOP.x, TOP.y, TOP.w, TOP.h);
-    if (logo) { const bw = 680, bh = 170, r = Math.min(bw / logo.width, bh / logo.height), lw = logo.width * r, lh = logo.height * r; ctx.save(); ctx.shadowColor = 'rgba(255,120,30,0.6)'; ctx.shadowBlur = 30; ctx.drawImage(logo, TOP.x + TOP.w / 2 - lw / 2, TOP.y + 14 + (bh - lh) / 2, lw, lh); ctx.restore(); }
-    else { ctx.fillStyle = '#ff3b1f'; ctx.font = '900 110px Impact, "Arial Black", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('BLAZING 7s', TOP.x + TOP.w / 2, TOP.y + 100); }
+    /* logo on the left half of the marquee, the top-award plaque on the right */
+    const logoCx = TOP.x + TOP.w * 0.3;
+    if (logo) { const bw = 560, bh = TOP.h - 40, r = Math.min(bw / logo.width, bh / logo.height), lw = logo.width * r, lh = logo.height * r; ctx.save(); ctx.shadowColor = 'rgba(255,120,30,0.6)'; ctx.shadowBlur = 30; ctx.drawImage(logo, logoCx - lw / 2, TOP.y + TOP.h / 2 - lh / 2, lw, lh); ctx.restore(); }
+    else { ctx.fillStyle = '#ff3b1f'; ctx.font = '900 84px Impact, "Arial Black", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('BLAZING 7s', logoCx, TOP.y + TOP.h / 2); }
     /* top award plaque */
-    this.chrome(ctx, TOP.x + 190, TOP.y + TOP.h - 42, 420, 30, 8, false);
-    ctx.fillStyle = '#1a0a06'; ctx.font = '700 17px ' + FONT_UI; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('3 COINS PLAYS THE 5,000 COIN DOUBLE JACKPOT', TOP.x + TOP.w / 2, TOP.y + TOP.h - 27);
-    /* chase lamps around the glass */
-    const lamps = 22, jack = g0.jackpotUntil > now, win = g0.chaseUntil > now;
+    const plaqueX = TOP.x + TOP.w * 0.57, plaqueW = 470;
+    this.chrome(ctx, plaqueX, TOP.y + TOP.h / 2 - 17, plaqueW, 34, 8, false);
+    ctx.fillStyle = '#1a0a06'; ctx.font = '700 18px ' + FONT_UI; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('3 COINS PLAYS THE 5,000 COIN DOUBLE JACKPOT', plaqueX + plaqueW / 2, TOP.y + TOP.h / 2 + 1);
+    /* chase lamps along the top and bottom edges of the glass */
+    const lamps = 34, jack = g0.jackpotUntil > now, win = g0.chaseUntil > now;
     for (let i = 0; i < lamps; i++) {
       const u = i / lamps, lx = TOP.x + 16 + u * (TOP.w - 32), on = jack ? (Math.floor(now * 10) + i) % 3 === 0 : win ? (Math.floor(now * 7) + i) % 4 === 0 : (Math.floor(now * 1.5) + i) % 11 === 0;
-      [TOP.y + 10, TOP.y + TOP.h - 52].forEach(ly => { ctx.save(); if (on) { ctx.shadowColor = '#ffd36a'; ctx.shadowBlur = 14; } ctx.fillStyle = on ? '#fff0b0' : 'rgba(120,80,30,0.6)'; ctx.beginPath(); ctx.arc(lx, ly, 4, 0, 6.283); ctx.fill(); ctx.restore(); });
+      [TOP.y + 10, TOP.y + TOP.h - 10].forEach(ly => { ctx.save(); if (on) { ctx.shadowColor = '#ffd36a'; ctx.shadowBlur = 14; } ctx.fillStyle = on ? '#fff0b0' : 'rgba(120,80,30,0.6)'; ctx.beginPath(); ctx.arc(lx, ly, 4, 0, 6.283); ctx.fill(); ctx.restore(); });
     }
     /* glass reflection */
     g = ctx.createLinearGradient(TOP.x, TOP.y, TOP.x + TOP.w * 0.5, TOP.y + TOP.h); g.addColorStop(0, 'rgba(255,255,255,0.14)'); g.addColorStop(0.35, 'rgba(255,255,255,0.02)'); g.addColorStop(0.5, 'rgba(255,255,255,0)'); ctx.fillStyle = g; ctx.fillRect(TOP.x, TOP.y, TOP.w, TOP.h);
@@ -200,9 +206,6 @@
       ctx.save(); ctx.shadowColor = '#ff2a1a'; ctx.shadowBlur = 10; ctx.fillStyle = hot ? '#ffe27a' : '#e8281c';
       ctx.beginPath(); ctx.moveTo(x, py); ctx.lineTo(x - dir * 26, py - 13); ctx.lineTo(x - dir * 26, py + 13); ctx.closePath(); ctx.fill(); ctx.restore();
     });
-    ctx.fillStyle = '#d8d0c0'; ctx.font = '700 15px ' + FONT_UI; ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
-    ctx.save(); ctx.translate(REEL.x - 60, py); ctx.rotate(-Math.PI / 2); ctx.fillText('PAYLINE', 0, 0); ctx.restore();
-    ctx.save(); ctx.translate(REEL.x + REEL.winW + 60, py); ctx.rotate(Math.PI / 2); ctx.fillText('PAYLINE', 0, 0); ctx.restore();
     /* glass reflections */
     let g = ctx.createLinearGradient(GLASS.x, GLASS.y, GLASS.x + GLASS.w * 0.5, GLASS.y + GLASS.h); g.addColorStop(0, 'rgba(255,255,255,0.13)'); g.addColorStop(0.3, 'rgba(255,255,255,0.03)'); g.addColorStop(0.5, 'rgba(255,255,255,0)'); ctx.fillStyle = g; ctx.fillRect(GLASS.x, GLASS.y, GLASS.w, GLASS.h);
     g = ctx.createLinearGradient(0, REEL.y, 0, REEL.y + 30); g.addColorStop(0, 'rgba(0,0,0,0.6)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(REEL.x, REEL.y, REEL.winW, 30);
@@ -215,7 +218,7 @@
     const g0 = this.game;
     ctx.fillStyle = '#05070a'; rr(ctx, VFD.x, VFD.y, VFD.w, VFD.h, 5); ctx.fill();
     ctx.save(); ctx.shadowColor = 'rgba(90,230,255,0.9)'; ctx.shadowBlur = 10; ctx.fillStyle = '#9ff1ff';
-    ctx.font = '700 17px "Lucida Console", Consolas, monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = '700 20px "Lucida Console", Consolas, monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     const msg = g0.message || '';
     const blink = g0.messageBlink && Math.floor(now * 1.6) % 2 === 1;
     if (!blink) ctx.fillText(msg, VFD.x + VFD.w / 2, VFD.y + VFD.h / 2 + 1);
@@ -249,7 +252,7 @@
   };
   P.drawMeters = function (ctx, now) {
     const g0 = this.game, y = METERS.y, h = METERS.h;
-    const items = [['COINS PLAYED', String(g0.coinsPlayed), 2, 596], ['CREDITS', String(Math.max(0, Math.round(g0.credits))), 6, 816], ['WINNER PAID', String(Math.round(g0.winnerPaid)), 5, 1116]];
+    const items = [['COINS PLAYED', String(g0.coinsPlayed), 2, 940], ['CREDITS', String(Math.max(0, Math.round(g0.credits))), 6, 1066], ['WINNER PAID', String(Math.round(g0.winnerPaid)), 5, 1336]];
     items.forEach(([label, value, digits, x]) => {
       const w = digits * 36 + 24;
       ctx.fillStyle = '#c8c8cc'; ctx.font = '700 14px ' + FONT_UI; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -269,9 +272,10 @@
     ctx.fillStyle = '#07050a'; ctx.fillRect(0, 0, BELLY.w, BELLY.h);
     if (flames) { ctx.globalAlpha = 0.28; const r = Math.max(BELLY.w / flames.width, BELLY.h / flames.height); ctx.drawImage(flames, (BELLY.w - flames.width * r) / 2, BELLY.h - flames.height * r + 40, flames.width * r, flames.height * r); ctx.globalAlpha = 1; }
     const g = ctx.createLinearGradient(0, 0, 0, BELLY.h); g.addColorStop(0, 'rgba(0,0,0,0.3)'); g.addColorStop(1, 'rgba(0,0,0,0.7)'); ctx.fillStyle = g; ctx.fillRect(0, 0, BELLY.w, BELLY.h);
-    const colW = BELLY.w / 2, rowH = 21, top = 30, iconS = 18, iconGap = 38;
-    const header = (x0) => { ctx.font = '700 12px ' + FONT_UI; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; [1, 2, 3].forEach((cn, i) => { const lit = cn === coins; ctx.fillStyle = lit ? '#ffe27a' : '#8a8a90'; ctx.fillText(cn + (cn > 1 ? ' COINS' : ' COIN'), x0 + colW - 178 + i * 62, 13); }); };
-    header(0); header(colW);
+    /* four columns of four combinations, so the glass stays a wide strip under the big reels */
+    const colW = BELLY.w / 4, rowH = 24, top = 36, iconS = 20, iconGap = 40;
+    const header = (x0) => { ctx.font = '700 12px ' + FONT_UI; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; [1, 2, 3].forEach((cn, i) => { const lit = cn === coins; ctx.fillStyle = lit ? '#ffe27a' : '#8a8a90'; ctx.fillText(cn + (cn > 1 ? ' COINS' : ' COIN'), x0 + colW - 178 + i * 62, 16); }); };
+    for (let c = 0; c < 4; c++) header(c * colW);
     const drawIcon = (sym, x, y) => {
       ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
       if (sym === 'A7') { ctx.fillStyle = '#ff4a30'; ctx.font = '900 11px ' + FONT_UI; ctx.fillText('ANY 7', x + iconS / 2, y + iconS / 2 + 1); return; }
@@ -280,7 +284,7 @@
       const img = A.symbol(sym, 0); if (img) ctx.drawImage(img, x - 8, y - 4, iconS + 16, iconS + 8);
     };
     C.paytable.forEach((row, i) => {
-      const col = i < 8 ? 0 : 1, ri = i % 8, x0 = col * colW + 18, y = top + ri * rowH;
+      const col = Math.floor(i / 4), ri = i % 4, x0 = col * colW + 18, y = top + ri * rowH;
       if (ri % 2 === 0) { ctx.fillStyle = 'rgba(255,255,255,0.035)'; ctx.fillRect(col * colW + 6, y - 2, colW - 12, rowH); }
       const first = row.pat[0];
       if (first === 'A7' || first === 'AB' || first === 'BL') {
@@ -310,10 +314,10 @@
     ctx.drawImage(this.payGlass, BELLY.x, BELLY.y);
     const pr = g0.present;
     if (pr && pr.row != null) {
-      const i = pr.row, col = i < 8 ? 0 : 1, ri = i % 8, colW = BELLY.w / 2, y = BELLY.y + 30 + ri * 21 - 2;
+      const i = pr.row, col = Math.floor(i / 4), ri = i % 4, colW = BELLY.w / 4, y = BELLY.y + 36 + ri * 24 - 2;
       const on = Math.floor((now - pr.t0) * 5) % 2 === 0;
-      ctx.fillStyle = on ? 'rgba(255,220,100,0.32)' : 'rgba(255,220,100,0.12)'; ctx.fillRect(BELLY.x + col * colW + 6, y, colW - 12, 21);
-      ctx.strokeStyle = 'rgba(255,230,140,0.9)'; ctx.lineWidth = 1.5; ctx.strokeRect(BELLY.x + col * colW + 6, y, colW - 12, 21);
+      ctx.fillStyle = on ? 'rgba(255,220,100,0.32)' : 'rgba(255,220,100,0.12)'; ctx.fillRect(BELLY.x + col * colW + 6, y, colW - 12, 24);
+      ctx.strokeStyle = 'rgba(255,230,140,0.9)'; ctx.lineWidth = 1.5; ctx.strokeRect(BELLY.x + col * colW + 6, y, colW - 12, 24);
     }
     const g = ctx.createLinearGradient(BELLY.x, BELLY.y, BELLY.x + BELLY.w * 0.5, BELLY.y + BELLY.h); g.addColorStop(0, 'rgba(255,255,255,0.1)'); g.addColorStop(0.4, 'rgba(255,255,255,0.02)'); g.addColorStop(0.5, 'rgba(255,255,255,0)'); ctx.fillStyle = g; ctx.fillRect(BELLY.x, BELLY.y, BELLY.w, BELLY.h);
     ctx.restore();
@@ -349,7 +353,7 @@
       const t = g0.jackpotUntil - now, a = Math.min(1, t / 0.5);
       ctx.save(); ctx.globalAlpha = a;
       ctx.font = '900 118px Impact, "Arial Black", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      const sc = 1 + 0.04 * Math.sin(now * 9); ctx.translate(W / 2, TOP.y + 96); ctx.scale(sc, sc);
+      const sc = 1 + 0.04 * Math.sin(now * 9); ctx.translate(W / 2, REEL.cy); ctx.scale(sc, sc);
       ctx.shadowColor = 'rgba(255,170,40,0.95)'; ctx.shadowBlur = 50; ctx.lineWidth = 10; ctx.strokeStyle = '#3a0a04'; ctx.strokeText('JACKPOT', 0, 0);
       const g = ctx.createLinearGradient(0, -55, 0, 55); g.addColorStop(0, '#fff6c8'); g.addColorStop(0.45, '#ffd54a'); g.addColorStop(0.55, '#e8281c'); g.addColorStop(1, '#8a1208');
       ctx.shadowBlur = 0; ctx.fillStyle = g; ctx.fillText('JACKPOT', 0, 0);
