@@ -32,6 +32,25 @@
   }
   A.roundRect = roundRect;
 
+  /* Bounding box of the painted pixels of an image (alpha above `min`), in image coordinates.
+     Lets a wide BAR fill the width of a wide cell and a 7 fill its height, like the printed
+     strip of a real stepper. Falls back to the whole image when the canvas is tainted (a page
+     opened straight from disk) or nothing is painted. */
+  A.paintedBounds = function (img, min) {
+    const full = { x: 0, y: 0, w: img.width, h: img.height };
+    try {
+      const n = 160, c = document.createElement('canvas'); c.width = c.height = n;
+      const cx = c.getContext('2d', { willReadFrequently: true }); cx.drawImage(img, 0, 0, n, n);
+      const d = cx.getImageData(0, 0, n, n).data;
+      let x0 = n, y0 = n, x1 = -1, y1 = -1;
+      for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (d[(y * n + x) * 4 + 3] > (min || 48)) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+      if (x1 < 0) return full;
+      const sx = img.width / n, sy = img.height / n;
+      const bx = Math.max(0, (x0 - 1) * sx), by = Math.max(0, (y0 - 1) * sy);
+      return { x: bx, y: by, w: Math.min(img.width, (x1 + 2) * sx) - bx, h: Math.min(img.height, (y1 + 2) * sy) - by };
+    } catch (e) { return full; }
+  };
+
   /* symbol variants per id: [sharp, blur1, blur2, blur3] at the given pixel size */
   A.prepareSymbols = function (w, h) {
     A.symW = w; A.symH = h;
@@ -40,9 +59,10 @@
       const base = document.createElement('canvas'); base.width = w; base.height = h;
       const ctx = base.getContext('2d'), img = A.images['sym_' + id];
       if (img) {
-        const m = 0.04, aw = w * (1 - 2 * m), ah = h * (1 - 2 * m);
-        const sc = Math.min(aw / img.width, ah / img.height), dw = img.width * sc, dh = img.height * sc;
-        ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+        /* the painted part of the artwork fills 96% of the cell in its limiting direction */
+        const b = A.paintedBounds(img), m = 0.02, aw = w * (1 - 2 * m), ah = h * (1 - 2 * m);
+        const sc = Math.min(aw / b.w, ah / b.h), dw = b.w * sc, dh = b.h * sc;
+        ctx.drawImage(img, b.x, b.y, b.w, b.h, (w - dw) / 2, (h - dh) / 2, dw, dh);
       } else drawFallback(ctx, id, w, h);
       const variants = [base];
       [0.08, 0.18, 0.32].forEach(frac => {

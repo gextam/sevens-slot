@@ -183,7 +183,7 @@
     const id = reel.symbolAt(k); if (id === 'BL') return;
     const img = A.symbol(id, level); if (!img) return;
     const u = reel.pos - k; if (Math.abs(u) > 2.1) return;
-    const n = level > 0 ? 4 : 10, pad = 10, dw = REEL.w - 2 * pad, dx = rx + pad;
+    const n = level > 0 ? 4 : 10, pad = 2, dw = REEL.w - 2 * pad, dx = rx + pad;
     for (let j = 0; j < n; j++) {
       const u0 = u - 0.5 + j / n, u1 = u0 + 1 / n, y0 = REEL.cy + proj(u0), y1 = REEL.cy + proj(u1);
       if (y1 <= REEL.y - 1 || y0 >= REEL.y + REEL.winH + 1) continue;
